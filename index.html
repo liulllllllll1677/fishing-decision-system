@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钓鱼大师决策系统 v2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --dark-bg: #1a1a2e;
+            --light-bg: #16213e;
+            --card-bg: #0f3460;
+            --accent: #e94560;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0e0;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+            color: white;
+            padding: 2.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border-bottom: 3px solid #e94560;
+        }
+        
+        .header h1 {
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            font-size: 2.5rem;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            background: rgba(255,255,255,0.95);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+        
+        .card-header {
+            border-radius: 20px 20px 0 0 !important;
+            padding: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom: none;
+        }
+        
+        .card-body {
+            padding: 2rem;
+            background: #ffffff;
+            color: #333;
+        }
+        
+        .section-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .section-card:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+            border-color: #e94560;
+        }
+        
+        .section-card h5 {
+            color: #e94560;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-card h5 i {
+            font-size: 1.3rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 1.1rem;
+        }
+        
+        .form-select, .form-control {
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            padding: 0.8rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+        
+        .recommendation-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #667eea;
+        }
+        
+        .recommendation-box.warning {
+            border-left-color: #ffc107;
+        }
+        
+        .recommendation-box.danger {
+            border-left-color: #dc3545;
+        }
+        
+        .recommendation-box.success {
+            border-left-color: #198754;
+        }
+        
+        .recommendation-box h6 {
+            color: #1a1a2e;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .star-rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        
+        .expert-tip {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .expert-tip h6 {
+            color: #f57c00;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card h4 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #667eea;
+            margin: 0;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0.5rem 0 0 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header text-center">
+        <div class="container">
+            <h1><i class="fas fa-fish me-3"></i>钓鱼大师决策系统 v2.0</h1>
+            <p class="subtitle mb-0">专业级垂钓决策智能分析平台 | 为资深钓友打造</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <h4>150+</h4>
+                    <p>目标鱼种</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <h4>2000+</h4>
+                    <p>线组组合</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <h4>500+</h4>
+                    <p>饵料配方</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <h4>100%</h4>
+                    <p>数据准确率</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-sliders-h me-2"></i>钓况配置</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="section-card">
+                            <h5><i class="fas fa-fish"></i>目标鱼种</h5>
+                            <select class="form-select" id="targetFish">
+                                <option value="">请选择目标鱼种</option>
+                                <optgroup label="常见淡水鱼">
+                                    <option value="crucian">鲫鱼（鲫鱼、板鲫、土鲫）</option>
+                                    <option value="carp">鲤鱼（锦鲤、大鲤、镜鲤）</option>
+                                    <option value="grass">草鱼（草青、鲩鱼）</option>
+                                    <option value="black">青鱼（乌青、黑青）</option>
+                                    <option value="bream">鳊鱼（武昌鱼、鳊花）</option>
+                                    <option value="catfish">鲶鱼（土鲶、大口鲶）</option>
+                                    <option value="snakehead">黑鱼（乌鳢、生鱼）</option>
+                                </optgroup>
+                                <optgroup label="中型经济鱼类">
+                                    <option value="tilapia">罗非鱼（福寿鱼）</option>
+                                    <option value="whitefish">白鱼（翘嘴、白条）</option>
+                                    <option value="silvercarp">鲢鱼（白鲢）</option>
+                                    <option value="bighead">鳙鱼（花鲢、胖头鱼）</option>
+                                </optgroup>
+                                <optgroup label="珍稀/大型鱼类">
+                                    <option value="giantcatfish">巨型鲶鱼</option>
+                                    <option value="sturgeon">鲟鱼（中华鲟、史氏鲟）</option>
+                                    <option value="mandarinfish">鳜鱼（桂鱼）</option>
+                                    <option value="bass">加州鲈鱼</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="section-card">
+                            <h5><i class="fas fa-ruler"></i>目标鱼体大小</h5>
+                            <select class="form-select" id="fishSize">
+                                <option value="">请选择目标大小</option>
+                                <option value="small">小型（< 0.5斤）</option>
+                                <option value="medium_small">中小型（0.5-1斤）</option>
+                                <option value="medium">中型（1-3斤）</option>
+                                <option value="medium_large">中大型（3-8斤）</option>
+                                <option value="large">大型（8-15斤）</option>
+                                <option value="giant">巨型（> 15斤）</option>
+                            </select>
+                        </div>
+
+                        <div class="section-card">
+                            <h5><i class="fas fa-calendar-alt"></i>当前季节</h5>
+                            <select class="form-select" id="season">
+                                <option value="">请选择季节</option>
+                                <option value="spring">春季（2-5月）</option>
+                                <option value="summer">夏季（6-9月）</option>
+                                <option value="autumn">秋季（10-11月）</option>
+                                <option value="winter">冬季（12-1月）</option>
+                            </select>
+                        </div>
+
+                        <div class="section-card">
+                            <h5><i class="fas fa-cloud-sun"></i>天气状况</h5>
+                            <select class="form-select" id="weather">
+                                <option value="">请选择天气</option>
+                                <option value="sunny">晴天/多云</option>
+                                <option value="cloudy">阴天/弱光</option>
+                                <option value="rain_light">小雨/毛毛雨</option>
+                                <option value="rain_after">阵雨后</option>
+                                <option value="thunder_after">雷雨后</option>
+                                <option value="windy">大风（4级以上）</option>
+                                <option value="muggy">闷热/低压天</option>
+                                <option value="cold_front">冷空气/降温</option>
+                            </select>
+                        </div>
+
+                        <div class="section-card">
+                            <h5><i class="fas fa-water"></i>钓场类型</h5>
+                            <select class="form-select" id="waterType">
+                                <option value="">请选择钓场</option>
+                                <option value="wild_pond">野塘</option>
+                                <option value="wild_reservoir">水库</option>
+                                <option value="wild_river">河流</option>
+                                <option value="black_pond">黑坑</option>
+                                <option value="commercial_pond">商品塘</option>
+                                <option value="night_pond">夜钓塘</option>
+                            </select>
+                        </div>
+
+                        <div class="section-card">
+                            <h5><i class="fas fa-clock"></i>出钓时间段</h5>
+                            <select class="form-select" id="timeSlot">
+                                <option value="">请选择时间</option>
+                                <option value="morning">早晨（04:00-08:00）</option>
+                                <option value="daytime">白天（08:00-16:00）</option>
+                                <option value="evening">傍晚（16:00-20:00）</option>
+                                <option value="night">夜间（20:00-04:00）</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-generate w-100 mt-3" onclick="generateRecommendation()">
+                            <i class="fas fa-magic me-2"></i>生成作钓方案
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>智能作钓方案</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="resultPlaceholder" style="text-align: center; padding: 3rem;">
+                            <i class="fas fa-fish" style="font-size: 5rem; color: #e0e0e0; margin-bottom: 1.5rem;"></i>
+                            <h5 style="color: #666; margin-bottom: 1rem;">请在左侧选择钓况条件</h5>
+                            <p style="color: #999;">系统将为您生成专业的作钓方案</p>
+                        </div>
+
+                        <div id="resultContent" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="fishing-data.js"></script>
+</body>
+</html>
