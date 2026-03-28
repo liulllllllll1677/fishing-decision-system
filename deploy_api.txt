@@ -1,0 +1,18 @@
+# API部署方案
+
+需要用户提供的信息：
+1. Netlify Personal Access Token
+   - 获取方式：https://app.netlify.com/user/applications
+   - 权限选择：Site -> Create/Delete, Site -> Deploy
+
+2. GitHub Personal Access Token
+   - 获取方式：https://github.com/settings/tokens
+   - 权限选择：repo
+
+一旦获得Token，我可以立即通过API完成部署：
+1. 创建GitHub仓库
+2. 推送代码
+3. 连接Netlify
+4. 获得永久网址
+
+这是目前最快的全自动方案！
